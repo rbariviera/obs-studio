@@ -11,3 +11,6 @@
 [submodule "plugins/obs-websocket"]
 	path = plugins/obs-websocket
 	url = https://github.com/obsproject/obs-websocket.git
+[submodule "plugins/obs-countdown"]
+	path = plugins/obs-countdown
+	url = https://github.com/rbariviera/obs-plugin-countdown
