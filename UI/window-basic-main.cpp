@@ -1916,7 +1916,7 @@ void OBSBasic::InitPrimitives()
 	circle = gs_render_save();
 
 	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin,
-		      &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine);
+		      &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine, &bottomLine);
 	obs_leave_graphics();
 }
 
@@ -2981,6 +2981,7 @@ OBSBasic::~OBSBasic()
 	gs_vertexbuffer_destroy(leftLine);
 	gs_vertexbuffer_destroy(topLine);
 	gs_vertexbuffer_destroy(rightLine);
+	gs_vertexbuffer_destroy(bottomLine);
 	obs_leave_graphics();
 
 	/* When shutting down, sometimes source references can get in to the
@@ -4593,6 +4594,7 @@ void OBSBasic::RenderMain(void *data, uint32_t, uint32_t)
 		RenderSafeAreas(window->leftLine, targetCX, targetCY);
 		RenderSafeAreas(window->topLine, targetCX, targetCY);
 		RenderSafeAreas(window->rightLine, targetCX, targetCY);
+		RenderSafeAreas(window->bottomLine, targetCX, targetCY);
 	}
 
 	window->ui->preview->DrawSceneEditing();
