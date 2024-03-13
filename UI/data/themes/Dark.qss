@@ -628,7 +628,8 @@ VolumeMeter {
     qproperty-magnitudeColor: rgb(0,0,0);
     qproperty-majorTickColor: palette(window-text);
     qproperty-minorTickColor: rgb(122,121,122); /* light */
-    qproperty-meterThickness: 3;
+
+    qproperty-meterThickness: 15;
 
     /* The meter scale numbers normally use your QWidget font, with size    */
     /* multiplied by meterFontScaling to get a proportionally smaller font. */
