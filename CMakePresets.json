@@ -145,7 +145,7 @@
         "ENABLE_BROWSER": true,
         "VIRTUALCAM_GUID": {"type": "STRING", "value": "A3FCE0F5-3493-419F-958A-ABA1250EC20B"},
         "GPU_PRIORITY_VAL": {"type": "STRING", "value": "$penv{GPU_PRIORITY_VAL}"},
-        "OBS_VERSION_OVERRIDE": {"type": "STRING", "value": "30.1.0-ADU"},
+        "OBS_VERSION_OVERRIDE": {"type": "STRING", "value": "30.1.1-ADU"},
         "ENABLE_CCACHE": false
       }
     },
