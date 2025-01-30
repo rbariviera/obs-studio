@@ -800,6 +800,7 @@ private:
 	gs_vertbuffer_t *leftLine = nullptr;
 	gs_vertbuffer_t *topLine = nullptr;
 	gs_vertbuffer_t *rightLine = nullptr;
+	gs_vertbuffer_t *bottomLine = nullptr;
 
 	int previewX = 0, previewY = 0;
 	int previewCX = 0, previewCY = 0;

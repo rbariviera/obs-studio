@@ -7,7 +7,7 @@
 
 Multiview::Multiview()
 {
-	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin, &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine);
+	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin, &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine, &bottomLine);
 }
 
 Multiview::~Multiview()
@@ -25,6 +25,7 @@ Multiview::~Multiview()
 	gs_vertexbuffer_destroy(leftLine);
 	gs_vertexbuffer_destroy(topLine);
 	gs_vertexbuffer_destroy(rightLine);
+	gs_vertexbuffer_destroy(bottomLine);
 	obs_leave_graphics();
 }
 
@@ -482,6 +483,7 @@ void Multiview::Render(uint32_t cx, uint32_t cy)
 		RenderSafeAreas(leftLine, targetCX, targetCY);
 		RenderSafeAreas(topLine, targetCX, targetCY);
 		RenderSafeAreas(rightLine, targetCX, targetCY);
+		RenderSafeAreas(bottomLine, targetCX, targetCY);
 	}
 
 	endRegion();

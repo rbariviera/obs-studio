@@ -34,6 +34,7 @@
       "binaryDir": "${sourceDir}/build_macos",
       "cacheVariables": {
         "CMAKE_OSX_DEPLOYMENT_TARGET": {"type": "STRING", "value": "12.0"},
+        "OBS_VERSION_OVERRIDE": {"type": "STRING", "value": "30.1.2-ADU"},
         "OBS_CODESIGN_IDENTITY": {"type": "STRING", "value": "$penv{CODESIGN_IDENT}"},
         "OBS_CODESIGN_TEAM": {"type": "STRING", "value": "$penv{CODESIGN_TEAM}"},
         "OBS_PROVISIONING_PROFILE": {"type": "STRING", "value": "$penv{PROVISIONING_PROFILE}"},
@@ -102,6 +103,7 @@
       "binaryDir": "${sourceDir}/build_x64",
       "generator": "Visual Studio 17 2022",
       "cacheVariables": {
+        "OBS_VERSION_OVERRIDE": {"type": "STRING", "value": "31.0.1-ADU"},
         "GPU_PRIORITY_VAL": {"type": "STRING", "value": "$penv{GPU_PRIORITY_VAL}"},
         "VIRTUALCAM_GUID": {"type": "STRING", "value": "A3FCE0F5-3493-419F-958A-ABA1250EC20B"},
         "ENABLE_BROWSER": true

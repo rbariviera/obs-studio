@@ -72,7 +72,7 @@ void OBSBasic::InitPrimitives()
 	}
 	circle = gs_render_save();
 
-	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin, &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine);
+	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin, &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine, &bottomLine);
 	obs_leave_graphics();
 }
 
@@ -185,6 +185,7 @@ void OBSBasic::RenderMain(void *data, uint32_t, uint32_t)
 		RenderSafeAreas(window->leftLine, targetCX, targetCY);
 		RenderSafeAreas(window->topLine, targetCX, targetCY);
 		RenderSafeAreas(window->rightLine, targetCX, targetCY);
+		RenderSafeAreas(window->bottomLine, targetCX, targetCY);
 	}
 
 	window->ui->preview->DrawSceneEditing();

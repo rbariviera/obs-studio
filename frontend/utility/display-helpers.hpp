@@ -69,7 +69,7 @@ static inline QSize GetPixelSize(QWidget *widget)
 
 static inline void InitSafeAreas(gs_vertbuffer_t **actionSafeMargin, gs_vertbuffer_t **graphicsSafeMargin,
 				 gs_vertbuffer_t **fourByThreeSafeMargin, gs_vertbuffer_t **leftLine,
-				 gs_vertbuffer_t **topLine, gs_vertbuffer_t **rightLine)
+				 gs_vertbuffer_t **topLine, gs_vertbuffer_t **rightLine, gs_vertbuffer_t **bottomLine)
 {
 	obs_enter_graphics();
 
@@ -114,6 +114,11 @@ static inline void InitSafeAreas(gs_vertbuffer_t **actionSafeMargin, gs_vertbuff
 	gs_vertex2f(1.0f, 0.5f);
 	gs_vertex2f(1 - LINE_LENGTH, 0.5f);
 	*rightLine = gs_render_save();
+
+	gs_render_start(true);
+	gs_vertex2f(0.5f, 1.0f);
+	gs_vertex2f(0.5f, 1 - LINE_LENGTH);
+	*bottomLine = gs_render_save();
 
 	obs_leave_graphics();
 }
