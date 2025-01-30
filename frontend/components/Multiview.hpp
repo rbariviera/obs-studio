@@ -35,6 +35,7 @@ private:
 	gs_vertbuffer_t *leftLine = nullptr;
 	gs_vertbuffer_t *topLine = nullptr;
 	gs_vertbuffer_t *rightLine = nullptr;
+	gs_vertbuffer_t *bottomLine = nullptr;
 
 	std::vector<OBSWeakSource> multiviewScenes;
 	std::vector<OBSSource> multiviewLabels;
