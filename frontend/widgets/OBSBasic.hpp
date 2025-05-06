@@ -23,6 +23,7 @@
 #include <OBSApp.hpp>
 #include <oauth/Auth.hpp>
 #include <utility/BasicOutputHandler.hpp>
+#include <utility/OBSCanvas.hpp>
 #include <utility/VCamConfig.hpp>
 #include <utility/platform.hpp>
 #include <utility/undo_stack.hpp>
@@ -62,6 +63,11 @@ class YouTubeAppDock;
 class QMessageBox;
 class QWidgetAction;
 struct QuickTransition;
+
+namespace OBS {
+class SceneCollection;
+struct Rect;
+} // namespace OBS
 
 #define DESKTOP_AUDIO_1 Str("DesktopAudioDevice1")
 #define DESKTOP_AUDIO_2 Str("DesktopAudioDevice2")
@@ -117,12 +123,6 @@ struct OBSProfile {
 	std::filesystem::path profileFile;
 };
 
-struct OBSSceneCollection {
-	std::string name;
-	std::string fileName;
-	std::filesystem::path collectionFile;
-};
-
 struct OBSPromptResult {
 	bool success;
 	std::string promptValue;
@@ -141,7 +141,8 @@ struct OBSPromptRequest {
 using OBSPromptCallback = std::function<bool(const OBSPromptResult &result)>;
 
 using OBSProfileCache = std::map<std::string, OBSProfile>;
-using OBSSceneCollectionCache = std::map<std::string, OBSSceneCollection>;
+using SceneCollection = OBS::SceneCollection;
+using OBSSceneCollectionCache = std::unordered_map<std::string, SceneCollection>;
 
 template<typename T> static T GetOBSRef(QListWidgetItem *item)
 {
@@ -250,6 +251,7 @@ class OBSBasic : public OBSMainWindow {
 		Vertical,
 		Horizontal,
 	};
+
 	/* -------------------------------------
 	 * MARK: - General
 	 * -------------------------------------
@@ -814,7 +816,7 @@ private:
 	float GetDevicePixelRatio();
 
 	void UpdatePreviewOverflowSettings();
-	void UpdatePreviewScrollbars();
+	void UpdatePreviewControls();
 
 	/* OBS Callbacks */
 	static void RenderMain(void *data, uint32_t cx, uint32_t cy);
@@ -822,9 +824,6 @@ private:
 	void ResizePreview(uint32_t cx, uint32_t cy);
 
 private slots:
-	void on_previewXScrollBar_valueChanged(int value);
-	void on_previewYScrollBar_valueChanged(int value);
-
 	void PreviewScalingModeChanged(int value);
 
 	void ColorChange();
@@ -832,12 +831,13 @@ private slots:
 	void EnablePreview();
 	void DisablePreview();
 
+	void setPreviewScalingWindow();
+	void setPreviewScalingCanvas();
+	void setPreviewScalingOutput();
+
 	void on_actionLockPreview_triggered();
 
 	void on_scalingMenu_aboutToShow();
-	void on_actionScaleWindow_triggered();
-	void on_actionScaleCanvas_triggered();
-	void on_actionScaleOutput_triggered();
 
 	void on_preview_customContextMenuRequested();
 	void on_previewDisabledWidget_customContextMenuRequested();
@@ -861,8 +861,9 @@ signals:
 	void OutputResized(uint32_t width, uint32_t height);
 
 	/* Preview signals */
-	void PreviewXScrollBarMoved(int value);
-	void PreviewYScrollBarMoved(int value);
+	void PreviewZoomIn();
+	void PreviewZoomOut();
+	void PreviewResetZoom();
 
 	/* -------------------------------------
 	 * MARK: - OBSBasic_Profiles
@@ -921,7 +922,7 @@ private:
 	QPointer<QMenu> previewProjectorSource;
 	QPointer<QMenu> previewProjectorMain;
 
-	void UpdateMultiviewProjectorMenu();
+	void updateMultiviewProjectorMenu();
 	void ClearProjectors();
 	OBSProjector *OpenProjector(obs_source_t *source, int monitor, ProjectorType type);
 
@@ -930,7 +931,6 @@ private:
 
 private slots:
 	void OpenSavedProjector(SavedProjectorInfo *info);
-	void on_multiviewProjectorWindowed_triggered();
 
 	void OpenPreviewProjector();
 	void OpenSourceProjector();
@@ -940,6 +940,7 @@ private slots:
 	void OpenPreviewWindow();
 	void OpenSourceWindow();
 	void OpenSceneWindow();
+	void openMultiviewWindow();
 
 public:
 	void DeleteProjector(OBSProjector *projector);
@@ -1049,16 +1050,14 @@ private:
 	bool clearingFailed = false;
 
 	QPointer<OBSMissingFiles> missDialog;
-	std::optional<std::pair<uint32_t, uint32_t>> migrationBaseResolution;
-	bool usingAbsoluteCoordinates = false;
 
-	OBSSceneCollectionCache collections{};
+	OBSSceneCollectionCache collections;
 
 	void DisableRelativeCoordinates(bool disable);
 	void CreateDefaultScene(bool firstStart);
-	void Save(const char *file);
-	void LoadData(obs_data_t *data, const char *file, bool remigrate = false);
-	void Load(const char *file, bool remigrate = false);
+	void Save(SceneCollection &collection);
+	void LoadData(obs_data_t *data, SceneCollection &collection);
+	void Load(SceneCollection &collection);
 
 	void ClearSceneData();
 	void LogScenes();
@@ -1069,8 +1068,8 @@ private:
 	void SetupDuplicateSceneCollection(const std::string &collectionName);
 	void SetupRenameSceneCollection(const std::string &collectionName);
 
-	const OBSSceneCollection &CreateSceneCollection(const std::string &collectionName);
-	void RemoveSceneCollection(OBSSceneCollection collection);
+	SceneCollection &CreateSceneCollection(const std::string &collectionName);
+	void RemoveSceneCollection(SceneCollection collection);
 
 	bool CreateDuplicateSceneCollection(const QString &name);
 	void DeleteSceneCollection(const QString &name);
@@ -1079,7 +1078,7 @@ private:
 	void RefreshSceneCollectionCache();
 
 	void RefreshSceneCollections(bool refreshCache = false);
-	void ActivateSceneCollection(const OBSSceneCollection &collection);
+	void ActivateSceneCollection(SceneCollection &collection);
 
 public slots:
 	void DeferSaveBegin();
@@ -1106,10 +1105,27 @@ public:
 
 	inline const OBSSceneCollectionCache &GetSceneCollectionCache() const noexcept { return collections; };
 
-	const OBSSceneCollection &GetCurrentSceneCollection() const;
+	SceneCollection &GetCurrentSceneCollection();
 
-	std::optional<OBSSceneCollection> GetSceneCollectionByName(const std::string &collectionName) const;
-	std::optional<OBSSceneCollection> GetSceneCollectionByFileName(const std::string &fileName) const;
+	std::optional<SceneCollection> GetSceneCollectionByName(const std::string &collectionName) const;
+	std::optional<SceneCollection> GetSceneCollectionByFileName(const std::string &fileName) const;
+
+	/* -------------------------------------
+	 * MARK: - OBSBasic_Canvases
+	 * -------------------------------------
+	 */
+private:
+	std::vector<OBS::Canvas> canvases;
+
+	static void CanvasRemoved(void *data, calldata_t *params);
+
+public:
+	const std::vector<OBS::Canvas> &GetCanvases() const noexcept { return canvases; }
+
+	const OBS::Canvas &AddCanvas(const std::string &name, obs_video_info *ovi = nullptr, int flags = 0);
+
+public slots:
+	bool RemoveCanvas(obs_canvas_t *canvas);
 
 	/* -------------------------------------
 	 * MARK: - OBSBasic_SceneItems
@@ -1439,6 +1455,7 @@ private:
 	QPointer<QMenu> trayMenu;
 
 	bool sysTrayMinimizeToTray();
+	void updateSysTrayProjectorMenu();
 
 private slots:
 	void IconActivated(QSystemTrayIcon::ActivationReason reason);
