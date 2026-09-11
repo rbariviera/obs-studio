@@ -1488,6 +1488,7 @@ void OBSBasic::applicationShutdown() noexcept
 	gs_vertexbuffer_destroy(leftLine);
 	gs_vertexbuffer_destroy(topLine);
 	gs_vertexbuffer_destroy(rightLine);
+	gs_vertexbuffer_destroy(bottomLine);
 	obs_leave_graphics();
 
 	/* When shutting down, sometimes source references can get in to the

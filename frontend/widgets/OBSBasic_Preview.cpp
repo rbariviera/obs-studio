@@ -72,7 +72,7 @@ void OBSBasic::InitPrimitives()
 	}
 	circle = gs_render_save();
 
-	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin, &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine);
+	InitSafeAreas(&actionSafeMargin, &graphicsSafeMargin, &fourByThreeSafeMargin, &leftLine, &topLine, &rightLine, &bottomLine);
 	obs_leave_graphics();
 }
 
