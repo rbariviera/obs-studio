@@ -187,6 +187,7 @@ void OBSBasic::RenderMain(void *data, uint32_t, uint32_t)
 		RenderSafeAreas(window->leftLine, targetCX, targetCY);
 		RenderSafeAreas(window->topLine, targetCX, targetCY);
 		RenderSafeAreas(window->rightLine, targetCX, targetCY);
+		RenderSafeAreas(window->bottomLine, targetCX, targetCY);
 	}
 
 	window->ui->preview->DrawSceneEditing();

@@ -5,10 +5,10 @@
 	path = plugins/obs-browser
 	url = https://github.com/rbariviera/obs-browser.git
 	branch = adu
-[submodule "plugins/obs-plugin-countdown"]
-	path = plugins/obs-plugin-countdown
-	url = https://github.com/rbariviera/obs-plugin-countdown.git
-	branch = adu
+[submodule "plugins/obs-plugin-countdown-adu"]
+	path = plugins/obs-plugin-countdown-adu
+	url = https://github.com/rbariviera/obs-plugin-countdown-adu.git
+	branch = main
 [submodule "plugins/obs-websocket"]
 	path = plugins/obs-websocket
 	url = https://github.com/obsproject/obs-websocket.git
