@@ -5,6 +5,10 @@
 	path = plugins/obs-browser
 	url = https://github.com/rbariviera/obs-browser.git
 	branch = adu
+[submodule "plugins/vertical-canvas"]
+	path = plugins/vertical-canvas
+	url = https://github.com/rbariviera/obs-vertical-canvas.git
+	branch = adu
 [submodule "plugins/obs-plugin-countdown-adu"]
 	path = plugins/obs-plugin-countdown-adu
 	url = https://github.com/rbariviera/obs-plugin-countdown-adu.git

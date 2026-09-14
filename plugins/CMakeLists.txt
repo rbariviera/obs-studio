@@ -80,6 +80,7 @@ add_obs_plugin(obs-libfdk)
 add_obs_plugin(obs-nvenc PLATFORMS WINDOWS LINUX ARCHITECTURES x64 x86_64)
 add_obs_plugin(obs-outputs)
 add_obs_plugin(obs-plugin-countdown-adu PLATFORMS WINDOWS MACOS LINUX)
+add_obs_plugin(vertical-canvas PLATFORMS WINDOWS MACOS LINUX)
 add_obs_plugin(
     obs-qsv11
     PLATFORMS WINDOWS LINUX
